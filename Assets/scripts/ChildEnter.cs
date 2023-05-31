@@ -18,6 +18,7 @@ public class ChildEnter : MonoBehaviour
     [SerializeField] TMP_Text text_Score;
     [SerializeField] Animator crowFly;
     [SerializeField] Animator playerFly;
+    [SerializeField] Animator showWord;
     [SerializeField] Image[] lives;
     [SerializeField] Sprite emptyLives;
 
@@ -51,6 +52,7 @@ public class ChildEnter : MonoBehaviour
         StartCoroutine(showWithDelay());
         childInput.onValueChanged.AddListener(delegate { InputCheck(); });
         crowFly.SetTrigger("fly");
+         
     }
 
 
@@ -88,6 +90,7 @@ public class ChildEnter : MonoBehaviour
                 instantiatedWord.transform.GetChild(j).gameObject.SetActive(true);
             }
             instantiatedWord.SetActive(false);
+           
         }
     }
 
@@ -103,18 +106,23 @@ public class ChildEnter : MonoBehaviour
 
     //word show one by one
     IEnumerator showWithDelay()
-    {
-        for (int i = typedWordIndex; i < TeacherEnter.wordList.Count; i++)
         {
+             
+          
+       while(typedWordIndex < TeacherEnter.wordList.Count)
+        {
+             Debug.Log(typedWordIndex);
+            showWord.SetTrigger("show");
+              yield return new WaitForSeconds(2f);
             playerFly.SetTrigger("playerFly");
           yield return new WaitForSeconds(5f);
-         spawnPositions.transform.GetChild(i).gameObject.SetActive(true);
-            for (int l = 0; l < TeacherEnter.wordLength[i]; l++)
-            {
-                yield return new WaitForSeconds(15f);
-                Debug.Log(spawnPositions.transform.GetChild(i).gameObject.name);
-                spawnPositions.transform.GetChild(i).GetChild(l).gameObject.SetActive(true);
-            }
+         spawnPositions.transform.GetChild(typedWordIndex).gameObject.SetActive(true);
+            // for (int l = 0; l < TeacherEnter.wordLength[i]; l++)
+            // {
+            //     yield return new WaitForSeconds(15f);
+            //     Debug.Log(spawnPositions.transform.GetChild(i).gameObject.name);
+            //     spawnPositions.transform.GetChild(i).GetChild(l).gameObject.SetActive(true);
+            // }
             yield return new WaitForSeconds(15f);
             childInput.text = "";
             
@@ -142,8 +150,10 @@ public class ChildEnter : MonoBehaviour
     {
 
         spawnPositions.transform.GetChild(typedWordIndex).gameObject.SetActive(false);
-        crowFly.SetTrigger("fly");
-        //  AppreciateAudio();
+        Debug.Log( spawnPositions.transform.GetChild(typedWordIndex).gameObject.name);
+
+        //crowFly.SetTrigger("fly");
+         
     }
 
 
@@ -167,15 +177,16 @@ public class ChildEnter : MonoBehaviour
                 {
                     //word typed fully
                     HideWord();
+                     AppreciateAudio();
                     UpdateScore();
 
                     typedWordIndex++;
-
+                    Debug.Log("length got");
 
                     childInput.text = "";
                     letterCheckIndex = 0;
 
-                    StopAllCoroutines();
+                  StopAllCoroutines();
                     StartCoroutine(showWithDelay());
 
 
@@ -213,6 +224,8 @@ public class ChildEnter : MonoBehaviour
         {
             lives[livesIndex].sprite = emptyLives;
             instantiatedWord.transform.position = spawnPositions.position;
+            Debug.Log( instantiatedWord.transform.position);
+             Debug.Log( spawnPositions.position);
             livesIndex++;
         }
 
