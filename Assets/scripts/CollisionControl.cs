@@ -6,6 +6,7 @@ public class CollisionControl : MonoBehaviour
 {
     [SerializeField] ChildEnter refChildEnter;
     [SerializeField] AudioSource audioData;
+    
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
@@ -16,6 +17,7 @@ public class CollisionControl : MonoBehaviour
 
         
       refChildEnter.lossScore();
+        
         /* if (livesIndex < 3)
       {
           lives[livesIndex].sprite = emptyLives;
